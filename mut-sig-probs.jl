@@ -129,35 +129,35 @@ function calculateFivemerMutationalProbabilities(fivemer)
 end
 
 """
-    calculateMutationalProbabilities(probs, sequence)
+    calculateMutationalProbabilities(sequence)
 
-Given a probabilities dict and a sequence, return two dicts, first of probability of
+Given a sequence, return two dicts, first of probability of
 AA to mutate to another AA, second of the actual fivemer at the location of the amino acid.
 
 Dicts are of type (int, AminoAcid, AminoAcid) => float|string
 where the int is the position of the AminoAcid, the first AminoAcid is the identity of the AminoAcid,
 and the second AminoAcid is the mutation target AminoAcid.
 """
-function calculateMutationalProbabilities(probs, sequence)
+function calculateMutationalProbabilities(sequence)
 
 	global fiveMers, d, graph
 	allProbsDict = Dict()
 	fiveMersDict = Dict()
-	startResidue = 2
+	residueNum = 2
 
 	# For each codon (exempting first and last codons)
 	for i in range(4; length=(length(sequence) ÷ 3 - 2), step=3)
 		codon = DNACodon(sequence[i:i+2])
 		fivemer = sequence[i-1 : i+3]
 
-		targetAAs = calculateFivemerMutationalProbabilities(probs, fivemer)
+		targetAAs = calculateFivemerMutationalProbabilities(fivemer)
 
 		for aa in Set(values(CodonTable))
 			prob = get(targetAAs, aa, 0)
-			allProbsDict[(startResidue, CodonTable[codon], aa)] = prob
-			fiveMersDict[(startResidue, CodonTable[codon], aa)] = fivemer
+			allProbsDict[(residueNum, CodonTable[codon], aa)] = prob
+			fiveMersDict[(residueNum, CodonTable[codon], aa)] = fivemer
 		end
-		startResidue += 1
+		residueNum += 1
 	end
 
 	return (allProbsDict, fiveMersDict)
